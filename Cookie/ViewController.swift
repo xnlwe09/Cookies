@@ -6,43 +6,51 @@
 //
 
 import UIKit
+import SnapKit
+import Then
 
         class MyViewController: UIViewController {
-            let numLabel = UILabel()
-            let openButton = UIButton()
-            let imageView = UIImageView()
-            let loadButton = UIButton()
-            var numCount: Int = 10
             
+            let numLabel = UILabel().then {
+                $0.text = "남은 포춘쿠키 : 10개"
+                $0.textColor = .black
+                //numLabel.translatesAutoresizingMaskIntoConstraints = false
+                //Auto Layout 쓴다고 알리는 거임
+                $0.font = UIFont.systemFont(ofSize: 13)
+            }
+            
+            let openButton = UIButton().then {
+                $0.setTitle("포춘 쿠키를 열어보세요!", for: .normal)
+                $0.titleLabel?.textColor = .white
+                $0.backgroundColor = UIColor(hexCode: "FFB266")
+                //openButton.translatesAutoresizingMaskIntoConstraints = false
+                $0.layer.cornerRadius = 5
+            }
+            
+            let imageView = UIImageView().then {
+                $0.image = UIImage(named: "cookie")
+                //imageView.translatesAutoresizingMaskIntoConstraints = false
+            }
+            
+            let loadButton = UIButton().then {
+                $0.setImage(UIImage(systemName: "arrow.clockwise"), for: .normal)
+                $0.tintColor = UIColor(hexCode: "FFB266")
+                //loadButton.translatesAutoresizingMaskIntoConstraints = false
+                $0.contentVerticalAlignment = .fill
+                $0.contentHorizontalAlignment = .fill
+            }
+            
+            var numCount: Int = 10
             var state: Bool = true
 
             override func viewDidLoad() {
                 super.viewDidLoad()
                 view.backgroundColor = UIColor(hexCode: "FDF5Ed")
                 
-                numLabel.text = "남은 포춘쿠키 : \(numCount)개"
-                numLabel.textColor = .black
-                numLabel.translatesAutoresizingMaskIntoConstraints = false
-                //Auto Layout 쓴다고 알리는 거임
-                numLabel.font = UIFont.systemFont(ofSize: 13)
-                
-                openButton.setTitle("포춘 쿠키를 열어보세요!", for: .normal)
-                openButton.titleLabel?.textColor = .white
-                openButton.backgroundColor = UIColor(hexCode: "FFB266")
-                openButton.translatesAutoresizingMaskIntoConstraints = false
-                openButton.layer.cornerRadius = 5
                 openButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-                
-                imageView.image = UIImage(named: "cookie")
-                imageView.translatesAutoresizingMaskIntoConstraints = false
-                
-                loadButton.setImage(UIImage(systemName: "arrow.clockwise"), for: .normal)
-                loadButton.tintColor = UIColor(hexCode: "FFB266")
-                loadButton.translatesAutoresizingMaskIntoConstraints = false
                 loadButton.addTarget(self, action: #selector(loadTapped), for: .touchUpInside)
-                loadButton.contentVerticalAlignment = .fill
-                loadButton.contentHorizontalAlignment = .fill
-                
+
+            
                 view.addSubview(numLabel) //view에 label 추가
                 view.addSubview(openButton)
                 view.addSubview(imageView)
@@ -50,45 +58,68 @@ import UIKit
                 
                     //Auto Layout
                 
-                   NSLayoutConstraint.activate([
+                 //  NSLayoutConstraint.activate([
                     // view의 위치를 정하는 제약조건
                     //activate는 제약조건을 적용하라는 명령
                    
-                    numLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
-                    numLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+                    //numLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13),
+                    //numLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+                    numLabel.snp.makeConstraints {
+                        $0.top.equalTo(view.safeAreaLayoutGuide).offset(13)
+                        $0.right.equalToSuperview().offset(-20) // = offset(20)
+                    }
                     
-                    openButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                    openButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
-                    openButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-                    openButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-                    //openButton.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -20)
-                    openButton.heightAnchor.constraint(equalToConstant: 43),
+//                    openButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//                    openButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
+//                    openButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+//                    openButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+//                    openButton.heightAnchor.constraint(equalToConstant: 43),
+//
+                    openButton.snp.makeConstraints {
+                        $0.centerX.equalToSuperview()
+                        $0.bottom.equalToSuperview().inset(40)
+                        $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
+                        $0.trailing.equalTo(view.safeAreaLayoutGuide).inset(15)
+                        $0.height.equalTo(43)
+                    }
+                
+                
+//                    imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+//                    imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+//                    imageView.widthAnchor.constraint(equalToConstant: 300),
+//                    imageView.heightAnchor.constraint(equalToConstant: 300),
+                    imageView.snp.makeConstraints {
+                        $0.center.equalToSuperview()
+                        $0.width.height.equalTo(300)
+                        //$0.size.equalTo(CGSize(width: 300, height: 300))
+                }
                     
-                    imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                    imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                    imageView.widthAnchor.constraint(equalToConstant: 300),
-                    imageView.heightAnchor.constraint(equalToConstant: 300),
                     
-                    
-                    loadButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
-                    loadButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-                    loadButton.widthAnchor.constraint(equalToConstant: 30),
-                    loadButton.heightAnchor.constraint(equalToConstant: 30)
+//                    loadButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
+//                    loadButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+//                    loadButton.widthAnchor.constraint(equalToConstant: 30),
+//                    loadButton.heightAnchor.constraint(equalToConstant: 30)
+                    loadButton.snp.makeConstraints {
+                        $0.top.equalTo(view.safeAreaLayoutGuide).inset(5)
+                        $0.leading.equalToSuperview().inset(10)
+                        $0.width.height.equalTo(30)
+                        //$0.size.equalTo(CGSize(width: 30, height: 30))
+                }
 
-                    
-                ])
+                    updateNumLabel()
+              //  ])
             }
             @objc func buttonTapped() {
                 if state == false {
                     openButton.setTitle("포춘 쿠키를 열어보세요!", for: .normal)
                     imageView.image = UIImage(named: "cookie")
-                   // imageView.image = UIImage(named: "cookie")
                     state = true
                 } else {
                     openButton.setTitle("다시하기", for: .normal)
                     imageView.image = UIImage(named: "open_cookie")
                     numCount -= 1
-                    numLabel.text = "남은 포춘쿠키 : \(numCount)개"
+                    updateNumLabel()
+                    //numLabel.text = "남은 포춘쿠키 : \(numCount)개"
                     state = false
                 }
                     // if문에서 state == false? → 아니니까 else 실행
@@ -96,11 +127,16 @@ import UIKit
             
             @objc func loadTapped() {
                 numCount = 10
-                numLabel.text = "남은 포춘쿠키 : \(numCount)개"
+                updateNumLabel()
+                //numLabel.text = "남은 포춘쿠키 : \(numCount)개"
                 openButton.setTitle("포춘 쿠키를 열어보세요!", for: .normal)
                 imageView.image = UIImage(named: "cookie")
                 state = true
                 
+            }
+            
+            private func updateNumLabel() {
+                numLabel.text = "남은 포춘쿠키 : \(numCount)개"
             }
 
         }
